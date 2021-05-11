@@ -8,10 +8,6 @@ pragma solidity >=0.7.0 <0.9.0;
  */
 contract AssetManagement {
     
-    // struct RequiredAssets {
-    //     uint type_id;
-    //     uint ammount;
-    // }
     struct Order {
         address owner;
         uint[2][] req_assets;    
@@ -23,13 +19,10 @@ contract AssetManagement {
         string customer_info;
     }
     
-
-    
     struct Asset {
         uint asset_id;
         uint type_id;
         uint order_id;
-        
     }
     
     uint orderNr;
@@ -42,7 +35,7 @@ contract AssetManagement {
     mapping( uint => Order) orders;
     mapping( uint => Asset) assets;
     
-    function getOrderNr() public returns (uint) {
+    function getOrderNr() private returns (uint) {
         orderNr +=1;
         return orderNr;
     }
@@ -121,5 +114,11 @@ contract AssetManagement {
         require(!orders[order_nr].activated);
         removeOrder(order_nr);
     }
-
+    
+    function activateOrder(uint order_nr,uint[] memory asset_nrs) public {
+        assignAssetsToOrder(order_nr, asset_nrs);
+        orders[order_nr].activated = true;
+    }
+    
+    
 }
