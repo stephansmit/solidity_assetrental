@@ -1,0 +1,160 @@
+// contracts/GameItem.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
+
+contract AssetFactory is ERC721URIStorage {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
+
+    constructor() ERC721("Asset", "ASET") {}
+
+    function createAsset(address location, string memory assetURI)
+        public
+        returns (uint256)
+    {
+        _tokenIds.increment();
+
+        uint256 newItemId = _tokenIds.current();
+        _mint(location, newItemId);
+        _setTokenURI(newItemId, assetURI);
+
+        return newItemId;
+    }
+}
+
+
+contract OrderFactory is ERC721URIStorage {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
+    
+    
+    uint dateTake;
+    uint dateLeave;
+    
+
+    constructor() ERC721("AssetOrder", "ORDER") {}
+
+    function createOrder(address location, string memory assetURI)
+        public
+        returns (uint256)
+    {
+        _tokenIds.increment();
+
+        uint256 newItemId = _tokenIds.current();
+        _mint(location, newItemId);
+        _setTokenURI(newItemId, assetURI);
+
+        return newItemId;
+    }
+}
+
+
+contract LocatieManager {
+    address addr;
+    OrderFactory orders;
+    AssetFactory assets;
+    TransferManager transferManager;
+    
+    mapping( uint => uint) balance;
+    mapping( uint => uint) nOrders;
+    
+    constructor(address locationAddr, address orderAddr, address assetAddr, address transferAddr) {
+        addr = locationAddr;
+        orders = OrderFactory(orderAddr);
+        assets = AssetFactory(assetAddr);
+        transferManager = transferManager(transferAddr);
+    }
+    
+    function getNumberOfAssets() public view returns (uint) {
+        return assets.balanceOf(addr);
+    }
+    
+    function calculateBalance(uint date) public returns (uint) {
+        return assets.balanceOf(addr) + transferManager.getBalance(date);
+    }
+    
+    function calculateNetTransfer(uint date) public returns (int){
+        
+        returns date    
+    }
+    
+}
+
+contract TransferManager {
+    Transfer[] transfers;
+
+    struct Transfer {
+        address from;
+        address to;
+        uint date;
+    }
+    mapping(address => )
+    function getBalance(date) public returns (int) {
+        int = r;
+        (for uint i=0; i <transfers.length; i++){
+            r = 
+        }
+    }
+    
+    function getPoolSize(date) public returns (uint) {
+        
+    }
+    
+    
+    
+    
+}
+
+
+
+// contract AssetManagementSystem {
+//     AssetFactory assetFactory;
+//     AssetOrderFactory orderFactory;
+//     AssetTokenFactory tokenFactory;
+//     constructor (address assetAdress, address orderAdress, address tokenAdress){
+//         assetFactory =  AssetFactory(assetAdress);
+//         orderFactory = AssetOrderFactory(orderAdress);
+//         tokenFactory = AssetTokenFactory(tokenAdress);
+//     }
+    
+//     address[] locationList; 
+//     mapping (address => bool) public locationAddr; 
+
+//     function addLocations(address[] memory addressLocations) public returns (bool) {
+//         // used to check adressUser uniqueness
+//         // mapping (address => bool) memory uniq;
+//         for(uint i = 0; i < addressLocations.length; i++) {
+//             address addr = addressLocations[i];
+//             require(locationAddr[addr] == false);
+//             // locationAddr[addr] = true;
+//             locationAddr[addr] = true;
+//             locationList.push(addr);
+//         }
+//         return true;
+//     }
+    
+//     function addAsset(address location, string memory assetURI) public returns (uint){
+//         // uint256 tmp= 1;
+//         return assetFactory.createAsset(location, assetURI);
+//         // tokenFactory.mint(tmp);
+//     }
+    
+//     // function addToken(address location) public {
+//     //     tokenFactory.mint(1);
+//     // }
+    
+//     function makeOrder(address location, uint[] memory requiredAssets ) public {
+//         for(uint i = 0; i < requiredAssets.length; i++) {
+//             tokenFactory.burn(uint(1));
+//             orderFactory.createOrder(location, "test");
+//         }
+//     }
+// }
+    
+    
+
